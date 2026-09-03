@@ -94,7 +94,6 @@ footer {
 
 footer p { margin: 0 0 .5rem; }
 footer a { color: var(--fg); }
-.langs [aria-current] { font-weight: 600; color: var(--fg); }
 
 /* --- Focus & skip link (keyboard access) ------------------------ */
 :focus-visible {
