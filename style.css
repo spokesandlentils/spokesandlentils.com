@@ -90,14 +90,12 @@ section { margin: 2.75rem 0; }
 .links { display: grid; gap: .75rem; }
 
 .link {
-  position: relative;               /* anchors the logo, see .icon below */
+  position: relative;               /* anchors .icon */
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 3.25rem;              /* large tap target */
-  /* The side padding leaves room for the logo and keeps the label
-     centred on the button rather than beside the logo. */
-  padding: .75rem 3.5rem;
+  padding: .75rem 3.5rem;           /* room for the logo; label stays centred */
   background: var(--accent-surface);
   color: var(--accent-ink);
   border: 1px solid var(--edge);
@@ -107,8 +105,7 @@ section { margin: 2.75rem 0; }
   text-decoration: none;
 }
 
-/* The logo sits at the left edge of the button and takes its colour from
-   the button's text, so it follows --accent in both light and dark. */
+/* Logo, pinned to the left edge and coloured by the button's text. */
 .icon {
   position: absolute;
   left: 1.125rem;
