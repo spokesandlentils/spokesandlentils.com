@@ -9,4 +9,6 @@ The `CNAME` file points the site at spokesandlentils.com; `.nojekyll` stops GitH
 
 **Change the colours:** edit the `--accent` line at the top of `style.css`.
 
+**Light / dark:** the site follows the visitor's browser or OS setting automatically — there is no toggle and nothing to configure. Dark mode reuses your `--accent`, lightening it so buttons stay readable on a dark page.
+
 **Placeholders:** every value to replace is in ALL_CAPS or marked `EDIT:`.
