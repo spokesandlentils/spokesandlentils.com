@@ -69,7 +69,7 @@ body {
 }
 
 h1, h2 { line-height: 1.25; text-wrap: balance; }
-h1 { font-size: 2rem; margin: 0 0 .25rem; letter-spacing: -.01em; }
+h1 { font-size: 2rem; margin: 1.5rem .25rem; letter-spacing: -.01em; }
 h2 { font-size: 1.25rem; margin: 0 0 .5rem; }
 p  { margin: 0 0 1rem; }
 
