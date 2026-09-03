@@ -3,6 +3,7 @@
    Any colour dark enough to carry white text works (aim for a mid-to-
    dark tone — this one has ~6:1 contrast against white, which passes
    WCAG AA). Examples: #1f6f4a green, #1d5f8a blue, #8a3a1f rust.
+   Dark mode derives its own lighter shade of this colour on its own.
    =================================================================== */
 :root { --accent: #1f6f4a; }
 
@@ -12,8 +13,12 @@
   --fg:        #16181a;  /* body text */
   --fg-muted:  #4a4f55;  /* tagline, footer */
   --accent-ink:#ffffff;  /* text on top of the accent colour */
+  --accent-surface: var(--accent);  /* the colour buttons are painted */
   --rule:      #dcdcd6;  /* hairlines */
   --edge:      transparent;
+
+  /* Tells the browser this page has both themes, so scrollbars, form
+     controls and the like get themed to match. */
   color-scheme: light dark;
 }
 
@@ -24,7 +29,26 @@
     --fg:       #eceff2;
     --fg-muted: #a8b0b8;
     --rule:     #2b3038;
+
+    /* --accent-surface and --accent-ink are inherited from above, so on
+       older browsers the buttons stay the accent colour with white text.
+       A mid-dark accent is faint against a dark page, so this hairline
+       keeps the button's shape visible there. */
     --edge:     rgba(255, 255, 255, .22);
+  }
+
+  /* Newer browsers can do better: re-light the accent rather than
+     outlining it. This keeps the hue and saturation of whatever --accent
+     you chose at the top of this file and only pins how light it is, so
+     the button stands out on the dark page no matter which colour you
+     picked — and it carries dark text instead of white. Nothing to edit
+     here; it follows --accent automatically. */
+  @supports (color: oklch(from red l c h)) {
+    :root {
+      --accent-surface: oklch(from var(--accent) 0.78 c h);
+      --accent-ink: #10131a;
+      --edge: transparent;   /* a light button needs no outline */
+    }
   }
 }
 
@@ -71,7 +95,7 @@ section { margin: 2.75rem 0; }
   justify-content: center;
   min-height: 3.25rem;              /* large tap target */
   padding: .75rem 1.25rem;
-  background: var(--accent);
+  background: var(--accent-surface);
   color: var(--accent-ink);
   border: 1px solid var(--edge);
   border-radius: 6px;
