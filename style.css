@@ -90,11 +90,12 @@ section { margin: 2.75rem 0; }
 .links { display: grid; gap: .75rem; }
 
 .link {
+  position: relative;               /* anchors .icon */
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 3.25rem;              /* large tap target */
-  padding: .75rem 1.25rem;
+  padding: .75rem 3.5rem;           /* room for the logo; label stays centred */
   background: var(--accent-surface);
   color: var(--accent-ink);
   border: 1px solid var(--edge);
@@ -102,6 +103,15 @@ section { margin: 2.75rem 0; }
   font-weight: 600;
   text-align: center;
   text-decoration: none;
+}
+
+/* Logo, pinned to the left edge and coloured by the button's text. */
+.icon {
+  position: absolute;
+  left: 1.125rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: currentColor;
 }
 
 .link:hover { filter: brightness(1.12); }
