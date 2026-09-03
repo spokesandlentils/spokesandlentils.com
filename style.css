@@ -1,0 +1,115 @@
+/* ===================================================================
+   EDIT THIS LINE to change the whole look of the site.
+   Any colour dark enough to carry white text works (aim for a mid-to-
+   dark tone — this one has ~6:1 contrast against white, which passes
+   WCAG AA). Examples: #1f6f4a green, #1d5f8a blue, #8a3a1f rust.
+   =================================================================== */
+:root { --accent: #1f6f4a; }
+
+/* --- Light theme (default) ------------------------------------- */
+:root {
+  --bg:        #fdfdfb;  /* page background */
+  --fg:        #16181a;  /* body text */
+  --fg-muted:  #4a4f55;  /* tagline, footer */
+  --accent-ink:#ffffff;  /* text on top of the accent colour */
+  --rule:      #dcdcd6;  /* hairlines */
+  --edge:      transparent;
+  color-scheme: light dark;
+}
+
+/* --- Dark theme (used automatically if the device asks for it) -- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:       #14161a;
+    --fg:       #eceff2;
+    --fg-muted: #a8b0b8;
+    --rule:     #2b3038;
+    --edge:     rgba(255, 255, 255, .22);
+  }
+}
+
+/* --- Base ------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0 auto;
+  max-width: 40rem;                 /* EDIT: page width */
+  padding: 2.5rem 1.25rem 4rem;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+               Arial, sans-serif;   /* system fonts only — no downloads */
+  font-size: 1.125rem;              /* 18px — do not go below 1.0625rem */
+  line-height: 1.65;
+  -webkit-text-size-adjust: 100%;
+}
+
+h1, h2 { line-height: 1.25; text-wrap: balance; }
+h1 { font-size: 2rem; margin: 0 0 .25rem; letter-spacing: -.01em; }
+h2 { font-size: 1.25rem; margin: 0 0 .5rem; }
+p  { margin: 0 0 1rem; }
+
+section { margin: 2.75rem 0; }
+
+.tagline { color: var(--fg-muted); font-size: 1.125rem; margin: 0; }
+
+/* Optional header photo (the commented-out <img> in the HTML) */
+.photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 0 1.75rem;
+  border-radius: 6px;
+}
+
+/* --- Link buttons ----------------------------------------------- */
+.links { display: grid; gap: .75rem; }
+
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.25rem;              /* large tap target */
+  padding: .75rem 1.25rem;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: 1px solid var(--edge);
+  border-radius: 6px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+}
+
+.link:hover { filter: brightness(1.12); }
+.link:active { filter: brightness(.92); }
+
+/* --- Footer ----------------------------------------------------- */
+footer {
+  margin-top: 3.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+  color: var(--fg-muted);
+  font-size: 1rem;
+}
+
+footer p { margin: 0 0 .5rem; }
+footer a { color: var(--fg); }
+
+/* --- Focus & skip link (keyboard access) ------------------------ */
+:focus-visible {
+  outline: 3px solid var(--fg);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.skip {
+  position: absolute;
+  left: -9999px;
+}
+
+.skip:focus {
+  position: static;
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: var(--fg);
+}
