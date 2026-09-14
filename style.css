@@ -77,7 +77,7 @@ section { margin: 2.75rem 0; }
 
 .tagline { color: var(--fg-muted); font-size: 1.125rem; margin: 0; }
 
-/* Optional header photo (the commented-out <img> in the HTML) */
+/* Header photo */
 .photo {
   display: block;
   width: 100%;
