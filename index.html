@@ -12,7 +12,15 @@
     <meta property="og:title" content="spokesandlentils">
     <meta property="og:description" content="Serena and Philipp cycle to Thailand (probably) 🚲">
     <meta property="og:locale" content="en">
-    <meta property="og:image" content="media/images/hero.jpeg">
+    <!-- The picture shown when someone shares a link to this site. It has to
+         be a full https:// address — a short path like media/images/... works
+         on the page but comes out blank on Facebook, WhatsApp and the rest.
+         Plain .jpg on purpose: the sharing robots do not all read .avif/.webp.
+         X/Twitter reuses og:image, so there is no separate line for it. -->
+    <meta property="og:image" content="https://spokesandlentils.com/media/images/hero-1200.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="757">
+    <meta property="og:image:alt" content="Serena and Philipp dressed in a white dress and a dark blue suit riding bicycles, smiling to the camera.">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="spokesandlentils">
     <meta name="twitter:description" content="Serena and Philipp cycle to Thailand (probably) 🚲">
@@ -26,9 +34,41 @@
 <header>
     <h1>spokesandlentils</h1>
     <p class="tagline">Serena and Philipp cycle to Thailand (probably) 🚲</p>
-    <img class="photo" src="media/images/hero.jpeg" width="1200"
-         height="800"
-         alt="Serena and Philipp dressed in a white dress and a dark blue suit riding bicycles, smiling to the camera.">
+    <!-- The header photo, offered in three sizes and three formats. The
+         browser reads this list and downloads ONE file: the smallest one that
+         still looks sharp on the visitor's screen. A phone takes ~42 KB
+         instead of the 2.5 MB original.
+
+         To use a different photo: save it over media/images/hero.jpeg and run
+         tools/build-images.py, which rewrites all nine files below. Nothing
+         here needs editing unless the new photo is a different shape — the
+         script prints the width and height numbers to use if so. -->
+    <picture>
+        <source type="image/avif"
+                srcset="media/images/hero-600.avif 600w,
+                        media/images/hero-900.avif 900w,
+                        media/images/hero-1200.avif 1200w"
+                sizes="(min-width: 640px) 600px, calc(100vw - 40px)">
+        <source type="image/webp"
+                srcset="media/images/hero-600.webp 600w,
+                        media/images/hero-900.webp 900w,
+                        media/images/hero-1200.webp 1200w"
+                sizes="(min-width: 640px) 600px, calc(100vw - 40px)">
+        <!-- Older browsers stop here and take the .jpg. width and height are
+             the photo's real proportions, so the page leaves exactly the right
+             gap for it and nothing jumps when it arrives. fetchpriority="high"
+             tells the browser to fetch it early — it is the first thing seen. -->
+        <img class="photo"
+             src="media/images/hero-600.jpg"
+             srcset="media/images/hero-600.jpg 600w,
+                     media/images/hero-900.jpg 900w,
+                     media/images/hero-1200.jpg 1200w"
+             sizes="(min-width: 640px) 600px, calc(100vw - 40px)"
+             width="1200"
+             height="757"
+             fetchpriority="high"
+             alt="Serena and Philipp dressed in a white dress and a dark blue suit riding bicycles, smiling to the camera.">
+    </picture>
 
 </header>
 
