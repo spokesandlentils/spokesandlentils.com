@@ -45,6 +45,14 @@ def main() -> None:
     src_path = Path(__file__).resolve().parent.parent / SOURCE
     out_dir = src_path.parent
 
+    if not src_path.is_file():
+        raise SystemExit(
+            f"There is no {SOURCE} to work from. The photo has to sit at that "
+            "exact path, with that exact name — if your camera or phone called "
+            "it something else (hero.jpg, HERO.JPEG, IMG_4021.jpeg), rename it "
+            "to hero.jpeg and run this again."
+        )
+
     with Image.open(src_path) as src:
         orientation = src.getexif().get(274, 1)
         if orientation != 1:
@@ -56,6 +64,24 @@ def main() -> None:
         full_w, full_h = master.size
 
     print(f"source: {full_w}x{full_h}, {src_path.stat().st_size / 1024:.0f} KiB")
+
+    # Never blow a small photo up. Stretching a 800px photo to 1200px makes a
+    # file that is both blurrier AND bigger than the original, and it is the
+    # one a modern phone would choose — so stop and say so instead.
+    if full_w < max(WIDTHS):
+        raise SystemExit(
+            f"\nhero.jpeg is only {full_w}px wide. The page needs one at least "
+            f"{max(WIDTHS)}px wide to stay sharp on a modern phone, so nothing "
+            "was written and the old files are untouched.\n\n"
+            "Export or re-scan the photo at a bigger size and run this again. "
+            "Enlarging this one would make the page blurrier and slower at the "
+            "same time.\n\n"
+            "If this really is the largest copy that exists, edit the WIDTHS "
+            "line near the top of this script — but then the srcset lines in "
+            "index.html have to be changed to match, or the page will point at "
+            "files that are not there and show no photo at all. Ask someone "
+            "comfortable with HTML to do that bit."
+        )
 
     for width in WIDTHS:
         height = round(width * full_h / full_w)
@@ -82,10 +108,20 @@ def main() -> None:
         )
         print(f"{width:>5}px ({width}x{height}) {sizes}")
 
-    tallest = round(1200 * full_h / full_w)
+    widest = max(WIDTHS)
+    tallest = round(widest * full_h / full_w)
     print(
-        f'\nindex.html: the <img> tag inside <picture> should say '
-        f'width="1200" height="{tallest}"'
+        "\nNow open index.html and, EVERY time the photo changes, rewrite BOTH"
+        "\ndescriptions of it — they still describe the old photo until you do,"
+        "\nand screen readers and link previews are what read them:"
+        '\n    the alt="..." on the <img> inside <picture>'
+        '\n    the <meta property="og:image:alt"> line in the <head>'
+        "\n\nIf the new photo is a DIFFERENT SHAPE from the old one, these three"
+        "\nnumbers have to change too, or the page will leave the wrong-sized gap"
+        "\nfor it and link previews will crop it oddly:"
+        f'\n    the <img> inside <picture>:  width="{widest}" height="{tallest}"'
+        f'\n    <meta property="og:image:width" content="{widest}">'
+        f'\n    <meta property="og:image:height" content="{tallest}">'
     )
 
 

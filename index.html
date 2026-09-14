@@ -16,7 +16,9 @@
          be a full https:// address — a short path like media/images/... works
          on the page but comes out blank on Facebook, WhatsApp and the rest.
          Plain .jpg on purpose: the sharing robots do not all read .avif/.webp.
-         X/Twitter reuses og:image, so there is no separate line for it. -->
+         X/Twitter reuses og:image, so there is no separate line for it.
+         The description and the two numbers below describe THIS photo — see
+         the note above the <picture> block for what to change when it does. -->
     <meta property="og:image" content="https://spokesandlentils.com/media/images/hero-1200.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="757">
@@ -36,24 +38,32 @@
     <p class="tagline">Serena and Philipp cycle to Thailand (probably) 🚲</p>
     <!-- The header photo, offered in three sizes and three formats. The
          browser reads this list and downloads ONE file: the smallest one that
-         still looks sharp on the visitor's screen. A phone takes ~42 KB
-         instead of the 2.5 MB original.
+         still looks sharp on the visitor's screen. A typical phone takes
+         roughly 95-165 KB of it, instead of the 2.5 MB original.
 
-         To use a different photo: save it over media/images/hero.jpeg and run
-         tools/build-images.py, which rewrites all nine files below. Nothing
-         here needs editing unless the new photo is a different shape — the
-         script prints the width and height numbers to use if so. -->
+         TO USE A DIFFERENT PHOTO: save it over media/images/hero.jpeg — it
+         needs to be at least 1200px wide — and run tools/build-images.py,
+         which rewrites all nine files listed below. Two things here still
+         need changing by hand:
+
+         1. EVERY time, rewrite both descriptions of the photo: the alt="..."
+            on the <img> at the bottom of this block, AND the og:image:alt line
+            up in the <head>. Until you do, they both describe the old photo to
+            screen-reader users and in every shared link preview.
+         2. If the new photo is a different SHAPE, put the width and height the
+            script prints on the <img> below, and the same two numbers on the
+            og:image:width / og:image:height lines in the <head>. -->
     <picture>
         <source type="image/avif"
                 srcset="media/images/hero-600.avif 600w,
                         media/images/hero-900.avif 900w,
                         media/images/hero-1200.avif 1200w"
-                sizes="(min-width: 640px) 600px, calc(100vw - 40px)">
+                sizes="(min-width: 40rem) 37.5rem, calc(100vw - 2.5rem)">
         <source type="image/webp"
                 srcset="media/images/hero-600.webp 600w,
                         media/images/hero-900.webp 900w,
                         media/images/hero-1200.webp 1200w"
-                sizes="(min-width: 640px) 600px, calc(100vw - 40px)">
+                sizes="(min-width: 40rem) 37.5rem, calc(100vw - 2.5rem)">
         <!-- Older browsers stop here and take the .jpg. width and height are
              the photo's real proportions, so the page leaves exactly the right
              gap for it and nothing jumps when it arrives. fetchpriority="high"
@@ -63,7 +73,7 @@
              srcset="media/images/hero-600.jpg 600w,
                      media/images/hero-900.jpg 900w,
                      media/images/hero-1200.jpg 1200w"
-             sizes="(min-width: 640px) 600px, calc(100vw - 40px)"
+             sizes="(min-width: 40rem) 37.5rem, calc(100vw - 2.5rem)"
              width="1200"
              height="757"
              fetchpriority="high"

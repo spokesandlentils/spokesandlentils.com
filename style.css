@@ -57,7 +57,13 @@
 
 body {
   margin: 0 auto;
-  max-width: 40rem;                 /* EDIT: page width */
+  /* EDIT: page width. Change this and you must also change the three
+     sizes="..." lines in the <picture> block in index.html to match (they
+     say 40rem and 37.5rem, which is this width minus the padding below) —
+     otherwise the browser keeps picking the photo for the old width and it
+     comes out soft. A much wider page needs bigger photos too: the WIDTHS
+     line in tools/build-images.py. */
+  max-width: 40rem;
   padding: 2.5rem 1.25rem 4rem;
   background: var(--bg);
   color: var(--fg);
