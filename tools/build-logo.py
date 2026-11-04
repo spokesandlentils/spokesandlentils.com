@@ -18,8 +18,10 @@ from PIL import Image
 SOURCE = Path("media/images/logo.png")
 STEM = "logo-header"
 
-# The logo is shown at most ~220px wide; 600px covers retina screens.
-WIDTH = 600
+# The logo is 36% of the header, and the header never covers more than 1920
+# screen pixels (see .hero in style.css), so the logo never needs more than
+# 0.36 x 1920 = 691 pixels. 700 covers every screen.
+WIDTH = 700
 
 
 def main() -> None:

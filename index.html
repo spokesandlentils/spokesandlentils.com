@@ -23,9 +23,9 @@
     <link rel="icon" href="favicon.ico" sizes="any">
     <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="style.css?v=6">
     <script>document.documentElement.classList.add('js')</script>
-    <script src="hero.js" defer></script>
+    <script src="hero.js?v=2" defer></script>
 </head>
 <body>
 
@@ -37,19 +37,25 @@
             <source type="image/avif"
                     srcset="media/images/hero-600.avif 600w,
                             media/images/hero-900.avif 900w,
-                            media/images/hero-1200.avif 1200w"
-                    sizes="(min-width: 40rem) 37.5rem, calc(100vw - 2.5rem)">
+                            media/images/hero-1200.avif 1200w,
+                            media/images/hero-1600.avif 1600w,
+                            media/images/hero-1920.avif 1920w"
+                    sizes="100vw">
             <source type="image/webp"
                     srcset="media/images/hero-600.webp 600w,
                             media/images/hero-900.webp 900w,
-                            media/images/hero-1200.webp 1200w"
-                    sizes="(min-width: 40rem) 37.5rem, calc(100vw - 2.5rem)">
+                            media/images/hero-1200.webp 1200w,
+                            media/images/hero-1600.webp 1600w,
+                            media/images/hero-1920.webp 1920w"
+                    sizes="100vw">
             <img class="photo"
                  src="media/images/hero-600.jpg"
                  srcset="media/images/hero-600.jpg 600w,
                          media/images/hero-900.jpg 900w,
-                         media/images/hero-1200.jpg 1200w"
-                 sizes="(min-width: 40rem) 37.5rem, calc(100vw - 2.5rem)"
+                         media/images/hero-1200.jpg 1200w,
+                         media/images/hero-1600.jpg 1600w,
+                         media/images/hero-1920.jpg 1920w"
+                 sizes="100vw"
                  width="1200"
                  height="675"
                  fetchpriority="high"
@@ -67,11 +73,13 @@
              motion and are on a decent connection. See README. -->
         <video class="hero-video" muted loop playsinline preload="none"
                disablepictureinpicture disableremoteplayback aria-hidden="true" tabindex="-1"
-               data-src="media/video/hero-v1.mp4"></video>
+               data-srcset="media/video/hero-v2-960.mp4 960w,
+                            media/video/hero-v2-1280.mp4 1280w,
+                            media/video/hero-v2-1920.mp4 1920w"></video>
         <h1 class="hero-title">
             <picture>
                 <source type="image/webp" srcset="media/images/logo-header.webp">
-                <img src="media/images/logo-header.png" width="600" height="499" alt="spokesandlentils">
+                <img src="media/images/logo-header.png" width="700" height="582" alt="spokesandlentils">
             </picture>
         </h1>
     </div>

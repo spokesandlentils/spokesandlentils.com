@@ -4,13 +4,16 @@
 #   tools/encode-hero-video.sh path/to/Banner.mp4
 #
 # Needs ffmpeg (tested with 6.1) and bc. Writes:
-#   media/video/hero-v1.mp4      short seamless loop, committed to the repo
+#   media/video/hero-v2-960.mp4  \
+#   media/video/hero-v2-1280.mp4  > the same short seamless loop at three
+#   media/video/hero-v2-1920.mp4 /  widths; hero.js picks the smallest one
+#                                   that is sharp on the visitor's screen
 #   media/images/hero.jpeg       its first frame = the poster master; then run
 #                                python3 tools/build-images.py for the web sizes
 #
 # The master is 1920x1080, 60 fps, 46.3 s, one static shot. Never commit it.
-# If you change anything here, bump the -v1 in the file names (and in
-# index.html) so browsers don't keep serving the old file.
+# If you change anything here, bump the -v2 in the file names (and in
+# index.html) so browsers don't keep serving the old files.
 set -euo pipefail
 
 SRC=${1:?usage: $0 path/to/Banner.mp4}
@@ -26,21 +29,22 @@ END=1602
 FADE=1                                     # seconds of dissolve
 FPS=30
 SHORT_LEN=$(echo "($END - $START) / 60" | bc -l)
-SHORT_RATE=1800k                           # ~1.4 MB for 6.07 s
+
+# Constant quality (CRF): every width gets the same visual quality, roughly
+# streaming-site 1080p. Lower = better and bigger; each -6 about doubles the
+# size. The sand and water are full of fine grain, which is what costs bits.
+CRF=23
 
 X264=(-c:v libx264 -preset veryslow -profile:v high -pix_fmt yuv420p
       -g $((FPS * 2)) -an -sn -dn -map_metadata -1
       -colorspace bt709 -color_primaries bt709 -color_trc bt709 -color_range tv)
 
-# Real two-pass encode: $1 = output, $2 = filter graph, $3 = bitrate.
-two_pass() {
-  local log; log=$(mktemp -d)
+# $1 = output, $2 = filter graph, $3 = peak bitrate cap (keeps the rate
+# steady enough to play while it downloads).
+encode() {
   ffmpeg -v error -y -i "$SRC" -filter_complex "$2" -map '[v]' "${X264[@]}" \
-         -b:v "$3" -pass 1 -passlogfile "$log/x264" -f null /dev/null
-  ffmpeg -v error -y -i "$SRC" -filter_complex "$2" -map '[v]' "${X264[@]}" \
-         -b:v "$3" -maxrate "$(( ${3%k} * 3 / 2 ))k" -bufsize "$(( ${3%k} * 2 ))k" \
-         -pass 2 -passlogfile "$log/x264" -movflags +faststart "$1"
-  rm -rf "$log"
+         -crf $CRF -maxrate "$3" -bufsize "$(( ${3%k} * 2 ))k" \
+         -movflags +faststart "$1"
   printf '%s  %s KiB\n' "$1" "$(( $(stat -c %s "$1") / 1024 ))"
 }
 
@@ -48,13 +52,15 @@ two_pass() {
 cut() { echo "trim=start_frame=$1:end_frame=$2,setpts=PTS-STARTPTS,fps=$FPS,scale=$W:-2:flags=lanczos"; }
 
 # 1) Short loop: [START, END) with its last second dissolving into
-#    [START - 1 s, START).
+#    [START - 1 s, START), at each width with its peak bitrate cap.
 mkdir -p media/video
-W=960
-two_pass media/video/hero-v1.mp4 \
-  "[0:v]split[a][b];[a]$(cut $START $END)[main];[b]$(cut $((START - 60 * FADE)) $START)[pre];
-   [main][pre]xfade=transition=fade:duration=$FADE:offset=$(echo "$SHORT_LEN - $FADE" | bc -l),format=yuv420p[v]" \
-  $SHORT_RATE
+for spec in 960:4000k 1280:7000k 1920:12000k; do
+  W=${spec%%:*}
+  encode "media/video/hero-v2-$W.mp4" \
+    "[0:v]split[a][b];[a]$(cut $START $END)[main];[b]$(cut $((START - 60 * FADE)) $START)[pre];
+     [main][pre]xfade=transition=fade:duration=$FADE:offset=$(echo "$SHORT_LEN - $FADE" | bc -l),format=yuv420p[v]" \
+    "${spec#*:}"
+done
 
 # 2) Poster master: frame 0 of the short loop, at full size. bt709 is the
 #    video's colour matrix, so the photo and the first video frame match.
