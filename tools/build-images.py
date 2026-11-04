@@ -23,10 +23,13 @@ from pathlib import Path
 
 from PIL import Image, features
 
-# The page is 40rem (640px) wide with 1.25rem (20px) of padding each side, so
-# the photo is never shown wider than 600px. 1200 is that same 600px slot on a
-# retina screen at double density — there is no point going any higher.
-WIDTHS = (600, 900, 1200)
+# The photo spans the window up to 960px (the video's width), so 1920 is that
+# widest 960px slot on a retina screen at double density. The master must be
+# at least as wide as the largest of these.
+WIDTHS = (600, 900, 1200, 1600, 1920)
+
+# The copy used for link previews (og:image in index.html).
+OG_WIDTH = 1200
 
 SOURCE = Path("media/images/hero.jpeg")
 STEM = "hero"
@@ -124,7 +127,7 @@ def main() -> None:
     print(f"\nplaceholder ({len(uri)} bytes) - paste into .hero in style.css:"
           f"\n    background: {avg} url({uri}) center / cover;")
 
-    widest = max(WIDTHS)
+    widest = OG_WIDTH
     tallest = round(widest * full_h / full_w)
     print(
         "\nNow open index.html and, EVERY time the photo changes, rewrite BOTH"

@@ -3,7 +3,8 @@
 
 The master (media/images/logo.png) must have a transparent background.
 This script trims the empty margin around it and shrinks it to web size,
-writing logo-header.webp and logo-header.png next to the master.
+writing logo-header.webp, logo-header-1400.webp and logo-header.png next
+to the master.
 Run it whenever logo.png changes (needs Pillow — pip install Pillow):
 
     python3 tools/build-logo.py
@@ -18,8 +19,11 @@ from PIL import Image
 SOURCE = Path("media/images/logo.png")
 STEM = "logo-header"
 
-# The logo is shown at most ~220px wide; 600px covers retina screens.
+# The logo is 36% of the header (at most 960px wide), so it is shown from
+# ~140px (phone) to ~346px wide. 600px covers phones on retina screens; the
+# 1400px copy is only fetched by wide retina screens.
 WIDTH = 600
+LARGE_WIDTH = 1400
 
 
 def main() -> None:
@@ -35,8 +39,15 @@ def main() -> None:
     # Trim the empty margin (ignore faint specks).
     box = alpha.point(lambda v: 255 if v > 8 else 0).getbbox()
     out = out.crop(box)
-    height = round(out.height * WIDTH / out.width)
-    out = out.resize((WIDTH, height), Image.LANCZOS)
+    trimmed = out
+
+    large_h = round(trimmed.height * LARGE_WIDTH / trimmed.width)
+    large = trimmed.resize((LARGE_WIDTH, large_h), Image.LANCZOS)
+    large.save(out_dir / f"{STEM}-{LARGE_WIDTH}.webp", quality=90, method=6)
+    print(f"Wrote {STEM}-{LARGE_WIDTH}.webp — {LARGE_WIDTH}x{large_h}.")
+
+    height = round(trimmed.height * WIDTH / trimmed.width)
+    out = trimmed.resize((WIDTH, height), Image.LANCZOS)
 
     out.save(out_dir / f"{STEM}.png", optimize=True)
     out.save(out_dir / f"{STEM}.webp", quality=90, method=6)
