@@ -23,6 +23,8 @@ The `CNAME` file points the site at spokesandlentils.com; `.nojekyll` stops GitH
 
 **Header logo:** the logo on the header is `media/images/logo-header.webp` (with a `.png` copy for old browsers), made from the master `media/images/logo.png`. To change it, save the new master over `logo.png` and run `python3 tools/build-logo.py` (needs Pillow). The master needs a transparent background; the script trims and shrinks it and prints the `width`/`height` to put on the logo `<img>` in `index.html`. The logo's size is the `width` on `.hero-title` in `style.css`.
 
+**After editing `style.css`:** bump the number in `style.css?v=2` in `index.html` (to `v=3`, and so on). Otherwise browsers that saw the site recently can keep the old stylesheet for a while and show the new page with old styles — e.g. a giant logo.
+
 **Change the colours:** edit the `--accent` line at the top of `style.css`.
 
 **Light / dark:** the site follows the visitor's browser or OS setting automatically — there is no toggle and nothing to configure. Dark mode reuses your `--accent`, lightening it so buttons stay readable on a dark page.
