@@ -69,8 +69,8 @@ body {
 }
 
 h1, h2 { line-height: 1.25; text-wrap: balance; }
-h1 { font-size: 2rem; margin: 0 0 .25rem; letter-spacing: -.01em; }
-h2 { font-size: 1.25rem; margin: 0 0 .5rem; }
+h1 { font-size: 2.5rem; margin: 0 0 .25rem; letter-spacing: -.01em; }
+h2 { font-size: 2rem; margin: 0 0 1rem; }
 p  { margin: 0 0 1rem; }
 
 section { margin: 2.75rem 0; }
@@ -139,36 +139,53 @@ section { margin: 2.75rem 0; }
   .photo, .hero-video { transition: none; }
 }
 
-/* --- Link buttons ----------------------------------------------- */
-.links { display: grid; gap: .75rem; }
+/* --- Link icons ------------------------------------------------
+   A row of plain icons that wraps onto new lines when it runs out of
+   room. Black on the light theme, white on the dark one. The label
+   shows as a tooltip on hover (title attribute) and is read out by
+   screen readers (.visually-hidden). */
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin: 0 -.625rem;               /* line the first icon up with the text */
+}
 
 .link {
-  position: relative;               /* anchors .icon */
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 3.25rem;              /* large tap target */
-  padding: .75rem 3.5rem;           /* room for the logo; label stays centred */
-  background: var(--accent-surface);
-  color: var(--accent-ink);
-  border: 1px solid var(--edge);
+  width: 3rem;                      /* large tap target */
+  height: 3rem;
+  color: #000;
   border-radius: 6px;
-  font-weight: 600;
-  text-align: center;
-  text-decoration: none;
+  transition: opacity .15s ease;
 }
 
-/* Logo, pinned to the left edge and coloured by the button's text. */
+@media (prefers-color-scheme: dark) {
+  .link { color: #fff; }
+}
+
 .icon {
-  position: absolute;
-  left: 1.125rem;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.75rem;
+  height: 1.75rem;
   fill: currentColor;
 }
 
-.link:hover { filter: brightness(1.12); }
-.link:active { filter: brightness(.92); }
+.link:hover { opacity: .65; }
+.link:active { opacity: .45; }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 /* --- Footer ----------------------------------------------------- */
 footer {
