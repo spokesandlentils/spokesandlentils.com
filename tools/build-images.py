@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Make the small web-sized copies of the header photo.
 
-You only need this if you REPLACE the header photo. Drop the new full-size
-photo in as media/images/hero.jpeg, then run:
+The header photo is the first frame of the header video (the "poster");
+tools/encode-hero-video.sh writes it to media/images/hero.jpeg. You need this
+script whenever that photo changes. Then run:
 
     pip install Pillow          # one-off, needs Python 3
     python3 tools/build-images.py
@@ -16,6 +17,8 @@ If the new photo has a different shape (taller/wider) than the old one, the
 script prints the width/height numbers to put on the <img> tag in index.html.
 """
 
+import base64
+import io
 from pathlib import Path
 
 from PIL import Image, features
@@ -90,11 +93,13 @@ def main() -> None:
         # No exif=/xmp= argument is passed anywhere below, so the camera and
         # editing metadata in the original is left out of these copies.
 
-        # JPEG is the fallback every browser understands. progressive=True is
-        # the important bit: it makes the photo appear whole-but-soft and then
-        # sharpen, instead of wiping in from the top a stripe at a time.
+        # JPEG is the fallback every browser understands. It is BASELINE (not
+        # progressive) on purpose: the page only shows the photo once it is
+        # fully decoded (img.decode() in index.html), and then fades it in
+        # over a tiny blurred placeholder, so there is no half-loaded stage to
+        # improve and baseline is a little smaller and quicker to decode.
         jpg = out_dir / f"{STEM}-{width}.jpg"
-        resized.save(jpg, "JPEG", quality=JPEG_QUALITY, optimize=True, progressive=True)
+        resized.save(jpg, "JPEG", quality=JPEG_QUALITY, optimize=True, progressive=False)
 
         webp = out_dir / f"{STEM}-{width}.webp"
         resized.save(webp, "WEBP", quality=WEBP_QUALITY, method=6)
@@ -107,6 +112,17 @@ def main() -> None:
             for p in (avif, webp, jpg)
         )
         print(f"{width:>5}px ({width}x{height}) {sizes}")
+
+    # The placeholder that fills the box until the real photo is ready:
+    # a 16px-wide copy, inlined in style.css as a data: URI (well under 1 KB),
+    # which the browser stretches into a soft blur. Plus its average colour.
+    tiny = master.resize((16, round(16 * full_h / full_w)), Image.LANCZOS)
+    buf = io.BytesIO()
+    tiny.save(buf, "JPEG", quality=60, optimize=True)
+    uri = "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode()
+    avg = "#%02x%02x%02x" % tuple(round(c) for c in master.resize((1, 1), Image.BOX).getpixel((0, 0)))
+    print(f"\nplaceholder ({len(uri)} bytes) - paste into .hero in style.css:"
+          f"\n    background: {avg} url({uri}) center / cover;")
 
     widest = max(WIDTHS)
     tallest = round(widest * full_h / full_w)
