@@ -145,6 +145,33 @@ section { margin: 2.75rem 0; }
   .photo, .hero-video { transition: none; }
 }
 
+/* --- Oval photo at the bottom -----------------------------------
+   An ellipse touching all four edges of the 4:3 photo (border-radius:
+   50%), so both faces stay inside it. Layers: blurred placeholder
+   (printed by tools/build-us-photo.py) -> photo, which fades in only
+   once fully decoded (see the script next to it in index.html). */
+.us {
+  width: min(100%, 36rem);
+  margin-inline: auto;
+  aspect-ratio: 4 / 3;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #716d66 url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAMABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAwIF/8QAJRAAAgIABQIHAAAAAAAAAAAAAQIDEQAEBQYhEkETFCIxQmHR/8QAFQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAXEQEBAQEAAAAAAAAAAAAAAAABABFB/9oADAMBAAIRAxEAPwAG3Br3UPWpej8AT+YRNwarUYkETsbLDwjagH6PN4xNPz+amnmSSZmUR2o7Lz2xGTzcnnHLBGuweoXfPviQTsuX/9k=) center / cover;
+}
+
+.us-photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: opacity .4s ease;
+}
+
+.js .us-photo:not(.ready) { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .us-photo { transition: none; }
+}
+
 /* --- Link icons ------------------------------------------------
    A row of plain icons that wraps onto new lines when it runs out of
    room. Black on the light theme, white on the dark one. The label
