@@ -56,8 +56,8 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 body {
-  max-width: 1920px;
   margin: 0;
+  max-width: 40rem;
   background: var(--bg);
   color: var(--fg);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
@@ -85,12 +85,7 @@ section { margin: 2.75rem 0; }
 /* --- Header photo / video ---------------------------------------
    Layers, bottom to top: blurred placeholder (the background below,
    printed by tools/build-images.py) -> photo -> video -> logo.
-   hero.js runs the video.
-   Spans the full width of the window, but never more than 1920 *screen*
-   pixels, the width of the video and photo masters, so neither is ever
-   stretched. Sharper screens pack more screen pixels into each CSS pixel,
-   so the cap is 1920 divided by the screen's density (rounded down to
-   be safe), set by the media queries below. Wider windows centre it. */
+   hero.js runs the video. */
 .hero {
   position: relative;
   margin: 0 auto 1.25rem;
@@ -98,15 +93,6 @@ section { margin: 2.75rem 0; }
   overflow: hidden;
   background: #9e9c99 url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA0JCgsKCA0LCgsODg0PEyAVExISEyccHhcgLikxMC4pLSwzOko+MzZGNywtQFdBRkxOUlNSMj5aYVpQYEpRUk//2wBDAQ4ODhMREyYVFSZPNS01T09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0//wAARCAAJABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAwQF/8QAIxAAAgEDAQkAAAAAAAAAAAAAAQIDABESBAUVMTIzQVFysf/EABUBAQEAAAAAAAAAAAAAAAAAAAEC/8QAFxEBAQEBAAAAAAAAAAAAAAAAAQAREv/aAAwDAQACEQMRAD8AXZEW7HUiXUmYKUIxvkRy2PDHzWxqZ2L5BmXvdUF/lRSdeP3ppanpJwv/2Q==) center / cover;
 }
-
-/* density above -> cap (1920 / the top of that range) */
-@media (min-resolution: 1.01dppx), (-webkit-min-device-pixel-ratio: 1.01) { .body { max-width: 1536px; } }
-@media (min-resolution: 1.26dppx), (-webkit-min-device-pixel-ratio: 1.26) { .body { max-width: 1280px; } }
-@media (min-resolution: 1.51dppx), (-webkit-min-device-pixel-ratio: 1.51) { .body { max-width: 960px; } }
-@media (min-resolution: 2.01dppx), (-webkit-min-device-pixel-ratio: 2.01) { .body { max-width: 768px; } }
-@media (min-resolution: 2.51dppx), (-webkit-min-device-pixel-ratio: 2.51) { .body { max-width: 640px; } }
-@media (min-resolution: 3.01dppx), (-webkit-min-device-pixel-ratio: 3.01) { .body { max-width: 548px; } }
-@media (min-resolution: 3.51dppx), (-webkit-min-device-pixel-ratio: 3.51) { .body { max-width: 480px; } }
 
 .photo {
   display: block;

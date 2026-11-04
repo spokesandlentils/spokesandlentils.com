@@ -1,5 +1,5 @@
 // Header video; see "Header video" in README.md. The photo is always there.
-// The loop is loaded only for visitors who want motion and aren't
+// The loop (data-src) is loaded only for visitors who want motion and aren't
 // on a slow/metered link, shown once it is really playing, and dropped if it
 // hasn't started within 8 s (visible-tab time).
 (() => {
@@ -9,17 +9,6 @@
   const net = navigator.connection || {};  // Chromium only
   if (matchMedia('(prefers-reduced-motion: reduce)').matches || net.saveData ||
       matchMedia('(prefers-reduced-data: reduce)').matches || /2g|3g/.test(net.effectiveType)) return;
-
-  // data-srcset lists the same loop at several widths: take the smallest
-  // that covers the header's width in screen pixels, else the largest.
-  const pick = () => {
-    const need = video.offsetWidth * (devicePixelRatio || 1);
-    const sizes = video.dataset.srcset.split(',')
-      .map((s) => s.trim().split(/\s+/))
-      .map(([url, w]) => ({ url, w: parseInt(w, 10) }))
-      .sort((a, b) => a.w - b.w);
-    return (sizes.find((s) => s.w >= need - 1) || sizes[sizes.length - 1]).url;
-  };
 
   let timer;
   const giveUp = () => {
@@ -39,7 +28,7 @@
       if (video.requestVideoFrameCallback) video.requestVideoFrameCallback(() => video.classList.add('on'));
       else video.classList.add('on');
     }, { once: true });
-    video.src = pick();
+    video.src = video.dataset.src;
     video.play().catch(giveUp);
   };
 
